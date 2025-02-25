@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>课程测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .question {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .result {
+            margin-top: 10px;
+            font-weight: bold;
+            color: green;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h2>课程测试</h2>
+    <div id="quiz"></div>
+    <button onclick="submitQuiz()">提交答案</button>
+    <div id="result" class="result"></div>
+    
+    <script>
+        const questions = [
+            {
+                question: "密码学的主要目标是什么？",
+            options: ["机密性、完整性、认证", "仅仅是数据加密", "提高计算机运行速度"],
+            answer: 0
+        },
+        {
+            question: "加密 (Encryption) 的定义是什么？",
+            options: ["将密文转换为明文", "将可读的明文转换为不可读的密文", "数据存储过程"],
+            answer: 1
+        },
+        {
+            question: "解密 (Decryption) 的前提是什么？",
+            options: ["拥有正确的密钥", "加密算法的复杂性", "密文的长度"],
+            answer: 0
+        },
+        {
+            question: "密钥 (Key) 在加密中的作用是什么？",
+            options: ["决定加密算法的类型", "用于加密和解密数据", "决定加密的效率"],
+            answer: 1
+        },
+        {
+            question: "为什么密钥的保密性至关重要？",
+            options: ["它决定了加密算法的效率", "它保证了数据的安全性", "它减少了存储成本"],
+            answer: 1
+        },
+        {
+            question: "对称加密的主要缺点是什么？",
+            options: ["加密和解密速度较慢", "密钥需要在通信双方之间安全地共享", "加密算法过于复杂"],
+            answer: 1
+        },
+        {
+            question: "在非对称加密中，公钥的作用是什么？",
+            options: ["用于加密数据", "用于解密数据", "用于密钥交换"],
+            answer: 0
+        },
+        {
+            question: "分组密码的工作方式是什么？",
+            options: ["每次加密一个字节", "每次加密一个比特", "每次处理固定大小的块"],
+            answer: 2
+        },
+        {
+            question: "流密码的优点是什么？",
+            options: ["加密速度慢但安全性高", "安全性较低，但速度快", "易于加密大数据"],
+            answer: 1
+        },
+        {
+            question: "替换操作的目的是？",
+            options: ["改变明文字符的排列顺序", "通过混淆字符关系来保护密文", "增强加密速度"],
+            answer: 1
+        },
+        {
+            question: "置换操作的主要目的是？",
+            options: ["改变明文字符或比特的位置", "进行字符的替换", "增加加密密钥的长度"],
+            answer: 0
+        },
+        {
+            question: "现代对称加密算法通常使用多轮操作，主要是为了？",
+            options: ["增加加密的复杂性和安全性", "减少计算时间", "使算法更容易实现"],
+            answer: 0
+        },
+        {
+            question: "本教程的重点是？",
+            options: ["介绍密码学的高级概念", "介绍密码学的基本概念和加密算法分类", "讨论网络攻击技术"],
+            answer: 1
+        }
+       ];
+
+        function renderQuiz() {
+            const quizContainer = document.getElementById("quiz");
+            quizContainer.innerHTML = "";
+            questions.forEach((q, index) => {
+                const questionDiv = document.createElement("div");
+                questionDiv.classList.add("question");
+                questionDiv.innerText = `${index + 1}. ${q.question}`;
+                quizContainer.appendChild(questionDiv);
+                
+                const optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+                q.options.forEach((option, i) => {
+                    const label = document.createElement("label");
+                    const input = document.createElement("input");
+                    input.type = "radio";
+                    input.name = `question${index}`;
+                    input.value = i;
+                    label.appendChild(input);
+                    label.appendChild(document.createTextNode(option));
+                    optionsDiv.appendChild(label);
+                });
+                quizContainer.appendChild(optionsDiv);
+                
+                const explanationDiv = document.createElement("div");
+                explanationDiv.classList.add("error");
+                explanationDiv.id = `explanation${index}`;
+                quizContainer.appendChild(explanationDiv);
+            });
+        }
+
+        function submitQuiz() {
+            let score = 0;
+            questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name=question${index}]:checked`);
+                const explanationDiv = document.getElementById(`explanation${index}`);
+                if (selected) {
+                    if (parseInt(selected.value) === q.answer) {
+                        score++;
+                        explanationDiv.innerText = ""; // 清空错误信息
+                    } else {
+                        explanationDiv.innerText = `错误！正确答案是：${q.options[q.answer]}。${q.explanation}`;
+                    }
+                } else {
+                    explanationDiv.innerText = "请回答此问题！";
+                }
+            });
+            document.getElementById("result").innerText = `你的得分: ${score} / ${questions.length}`;
+        }
+
+        renderQuiz();
+    </script>
+</body>
+</html>
